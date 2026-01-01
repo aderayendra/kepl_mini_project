@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Daftar Mahasiswa{% endblock %}
+
+{% block content %}
+    <h3>Daftar Mahasiswa</h3>
+
+    {% if session.admin %}
+        <button class="btn btn-primary mt-3" onclick="sync()">Sinkroninasi Dengan SIAKAD
+        </button>
+    {% endif %}
+
+    <table class="table table-bordered table-striped mt-3">
+        <thead class="table-dark">
+        <tr>
+            <th>NIM</th>
+            <th>Nama</th>
+            <th>Jenis Kelamin</th>
+            <th>Jurusan</th>
+            <th>Prodi</th>
+            <th>No.HP</th>
+            <th>Tanggal Masuk</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for m in mahasiswa_list %}
+            <tr>
+                <td>{{ m.nim }}</td>
+                <td>{{ m.nama }}</td>
+                <td>{{ m.jenis_kelamin }}</td>
+                <td>{{ m.jurusan }}</td>
+                <td>{{ m.prodi }}</td>
+                <td>{{ m.no_hp }}</td>
+                <td>{{ m.tanggal_masuk }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if not mahasiswa_list %}
+        <p>Belum ada mahasiswa terdaftar.</p>
+    {% endif %}
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        function sync() {
+            if (confirm('Apakah anda yakin ingin sinkroninasi data dengan SIAKAD?')) {
+                window.location.href = '/mahasiswa/sync';
+            }
+        }
+    </script>
+{% endblock %}
