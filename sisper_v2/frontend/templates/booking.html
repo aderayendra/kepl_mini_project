@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Booking Saya{% endblock %}
+
+{% block content %}
+<h3>Booking Saya</h3>
+
+<table class="table table-hover mt-3">
+    <thead class="table-secondary">
+        <tr>
+            <th>Judul</th>
+            <th>Penulis</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for b in bookings %}
+        <tr>
+            <td>{{ b.judul }}</td>
+            <td>{{ b.penulis }}</td>
+            <td>
+                <span class="badge bg-info">{{ b.status }}</span>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

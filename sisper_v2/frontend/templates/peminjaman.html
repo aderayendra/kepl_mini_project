@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% block title %}Daftar Peminjaman{% endblock %}
+
+{% block content %}
+    <h3>Daftar Peminjaman</h3>
+
+    {% if session.admin %}
+        <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#tambahPeminjamanModal">Tambah
+            Peminjaman
+        </button>
+    {% else %}
+        <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#tambahBookingModal">Tambah Booking
+        </button>
+    {% endif %}
+
+    <form class="row g-3 mt-2" action="/peminjaman" method="get">
+        <div class="col-auto">
+            <label for="cariPeminjaman" class="visually-hidden">Cari Buku</label>
+            <input type="text" required class="form-control" id="cariPeminjaman" name="s"
+                   placeholder="Cari nomor pinjam, isbn, atau nama.."
+                   value="{{ request.args.get('s', '') }}">
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary mb-3">Cari</button>
+        </div>
+    </form>
+
+    {% if request.args.get('s') %}
+        <p>Menampilkan pencarian <b>{{ request.args.get('s') }}</b></p>
+        <a href="/peminjaman">Kembali</a>
+    {% endif %}
+
+    <table class="table table-bordered table-striped mt-3">
+        <thead class="table-dark">
+        <tr>
+            <th>NO. Pinjam</th>
+            <th>ISBN</th>
+            <th>Judul Buku</th>
+            <th>NIM</th>
+            <th>Nama</th>
+            <th>Status</th>
+            <th>Aksi</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for p in peminjaman_list %}
+            <tr>
+                <td>{{ p.id }}</td>
+                <td>{{ p.isbn }}</td>
+                <td>{{ p.judul }}</td>
+                <td>{{ p.nim }}</td>
+                <td>{{ p.nama }}</td>
+                <td>
+                    {% if p.status == 'dibooking' %}
+                        <span class="badge bg-warning text-dark">Booking</span>
+                    {% elif p.status == 'dipinjam' %}
+                        <span class="badge bg-primary">Dipinjam</span>
+                    {% elif p.status == 'dikembalikan' %}
+                        <span class="badge bg-success">Dikembalikan</span>
+                    {% elif p.status == 'booking_ditolak' %}
+                        <span class="badge bg-danger">Ditolak</span>
+                    {% else %}
+                        {{ p.status }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if session.admin %}
+                        {% if p.status == 'dibooking' %}
+                            <a href="/peminjaman/setujui-booking?id={{ p.id }}"
+                               class="btn btn-success btn-sm">Setujui</a>
+                            <a href="/peminjaman/tolak-booking?id={{ p.id }}" class="btn btn-danger btn-sm">Tolak</a>
+                        {% elif p.status == 'dipinjam' %}
+                            <a href="/peminjaman/kembalikan?id={{ p.id }}"
+                               class="btn btn-success btn-sm">Kembalikan</a>
+                        {% endif %}
+                    {% else %}
+                        {% if p.status == 'dibooking' %}
+                            <button class="btn btn-danger btn-sm"
+                                    onclick="confirmDelete('{{ p.id }}')">
+                                Batal
+                            </button>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if not peminjaman_list %}
+        <p>Tidak ada peminjaman yang tersedia.</p>
+    {% endif %}
+
+    <!-- Modal Tambah Buku -->
+    {% if session.admin %}
+        <div class="modal fade" id="tambahPeminjamanModal" tabindex="-1" aria-labelledby="tambahPeminjamanModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="tambahPeminjamanModalLabel">Tambah Peminjaman</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="/peminjaman/tambah" method="post">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="isbn" class="form-label">ISBN Buku</label>
+                                <input type="text" maxlength="13" class="form-control" id="isbn" name="isbn" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="nim" class="form-label">NIM Mahasiswa</label>
+                                <input type="text" class="form-control" id="nim" name="nim" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="modal fade" id="tambahBookingModal" tabindex="-1" aria-labelledby="tambahBookingModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="tambahBookingModalLabel">Booking Buku</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="/peminjaman/booking" method="post">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="isbn" class="form-label">ISBN Buku</label>
+                                <input type="text" maxlength="13" class="form-control" id="isbn" name="isbn" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascript %}
+    <script>
+
+        function confirmDelete(id) {
+            if (confirm('Apakah Anda yakin ingin membatalkan booking dengan nomor "' + id + '"?')) {
+                window.location.href = '/peminjaman/hapus-booking?id=' + encodeURIComponent(id);
+            }
+        }
+
+        // Clear modal tambah buku when closed
+        document.getElementById('tambahPeminjamanModal').addEventListener('hidden.bs.modal', function () {
+            this.querySelector('form').reset();
+        });
+
+        // Clear modal edit buku when closed
+        document.getElementById('tambahBookingModal').addEventListener('hidden.bs.modal', function () {
+            this.querySelector('form').reset();
+        });
+    </script>
+{% endblock %}

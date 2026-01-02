@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+{% block title %}Daftar Buku{% endblock %}
+
+{% block content %}
+    <h3>Daftar Buku</h3>
+
+    {% if session.admin %}
+        <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#tambahBukuModal">Tambah Buku
+        </button>
+    {% endif %}
+
+    <form class="row g-3 mt-2" action="/buku" method="get">
+        <div class="col-auto">
+            <label for="cariBuku" class="visually-hidden">Cari Buku</label>
+            <input type="text" required class="form-control" id="cariBuku" name="s"
+                   placeholder="Cari buku judul atau penulis.."
+                   value="{{ request.args.get('s', '') }}">
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary mb-3">Cari</button>
+        </div>
+    </form>
+
+    {% if request.args.get('s') %}
+        <p>Menampilkan pencarian <b>{{ request.args.get('s') }}</b></p>
+        <a href="/buku">Kembali</a>
+    {% endif %}
+
+    <table class="table table-bordered table-striped mt-3">
+        <thead class="table-dark">
+        <tr>
+            <th>ISBN</th>
+            <th>Judul</th>
+            <th>Penulis</th>
+            <th>Kategori</th>
+            <th>Sinopsis</th>
+            <th>Tahun</th>
+            <th>Status</th>
+            {% if session.admin %}
+                <th>Aksi</th>
+            {% endif %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for b in buku %}
+            <tr>
+                <td>{{ b.isbn }}</td>
+                <td>{{ b.judul }}</td>
+                <td>{{ b.penulis }}</td>
+                <td>{{ b.kategori }}</td>
+                <td>{{ b.sinopsis }}</td>
+                <td>{{ b.tahun }}</td>
+                <td>{{ b.status }}</td>
+
+                {% if session.admin %}
+                    <td>
+                        <button class="btn btn-success btn-sm"
+                                onclick="openEditModal('{{ b.isbn }}', '{{ b.judul }}', '{{ b.penulis }}', '{{ b.kategori }}', '{{ b.sinopsis }}', '{{ b.tahun }}')">
+                            Edit
+                        </button>
+                        <button class="btn btn-danger btn-sm"
+                                onclick="confirmDelete('{{ b.isbn }}', '{{ b.judul }}')">
+                            Hapus
+                        </button>
+                    </td>
+                {% endif %}
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if not buku %}
+        <p>Tidak ada buku yang tersedia.</p>
+    {% endif %}
+
+    <!-- Modal Tambah Buku -->
+    {% if session.admin %}
+        <div class="modal fade" id="tambahBukuModal" tabindex="-1" aria-labelledby="tambahBukuModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="tambahBukuModalLabel">Tambah Buku Baru</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="/buku/tambah" method="post">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="isbn" class="form-label">ISBN</label>
+                                <input type="text" maxlength="13" class="form-control" id="isbn" name="isbn" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="judul" class="form-label">Judul</label>
+                                <input type="text" class="form-control" id="judul" name="judul" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="penulis" class="form-label">Penulis</label>
+                                <input type="text" class="form-control" id="penulis" name="penulis" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="kategori" class="form-label">Kategori</label>
+                                <input type="text" class="form-control" id="kategori" name="kategori" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="sinopsis" class="form-label">Sinopsis</label>
+                                <textarea class="form-control" id="sinopsis" name="sinopsis" rows="3"
+                                          required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="tahun" class="form-label">Tahun</label>
+                                <input type="number" maxlength="4" class="form-control" id="tahun" name="tahun"
+                                       required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Edit Buku -->
+        <div class="modal fade" id="editBukuModal" tabindex="-1" aria-labelledby="editBukuModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editBukuModalLabel">Edit Buku</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="/buku/edit" method="post">
+                        <div class="modal-body">
+                            <input type="hidden" id="edit_isbn_original" name="isbn_original">
+                            <div class="mb-3">
+                                <label for="edit_isbn" class="form-label">ISBN</label>
+                                <input type="text" readonly maxlength="13" class="form-control" id="edit_isbn"
+                                       name="isbn" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_judul" class="form-label">Judul</label>
+                                <input type="text" class="form-control" id="edit_judul" name="judul" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_penulis" class="form-label">Penulis</label>
+                                <input type="text" class="form-control" id="edit_penulis" name="penulis" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_kategori" class="form-label">Kategori</label>
+                                <input type="text" class="form-control" id="edit_kategori" name="kategori" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_sinopsis" class="form-label">Sinopsis</label>
+                                <textarea class="form-control" id="edit_sinopsis" name="sinopsis" rows="3"
+                                          required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_tahun" class="form-label">Tahun</label>
+                                <input type="number" maxlength="4" class="form-control" id="edit_tahun" name="tahun"
+                                       required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        function openEditModal(isbn, judul, penulis, kategori, sinopsis, tahun) {
+            document.getElementById('edit_isbn_original').value = isbn;
+            document.getElementById('edit_isbn').value = isbn;
+            document.getElementById('edit_judul').value = judul;
+            document.getElementById('edit_penulis').value = penulis;
+            document.getElementById('edit_kategori').value = kategori;
+            document.getElementById('edit_sinopsis').value = sinopsis;
+            document.getElementById('edit_tahun').value = tahun;
+
+            var modal = new bootstrap.Modal(document.getElementById('editBukuModal'));
+            modal.show();
+        }
+
+        function confirmDelete(isbn, judul) {
+            if (confirm('Apakah Anda yakin ingin menghapus buku "' + judul + '"?')) {
+                window.location.href = '/buku/hapus?isbn=' + encodeURIComponent(isbn);
+            }
+        }
+
+        // Clear modal tambah buku when closed
+        document.getElementById('tambahBukuModal').addEventListener('hidden.bs.modal', function () {
+            this.querySelector('form').reset();
+        });
+
+        // Clear modal edit buku when closed
+        document.getElementById('editBukuModal').addEventListener('hidden.bs.modal', function () {
+            this.querySelector('form').reset();
+        });
+    </script>
+{% endblock %}

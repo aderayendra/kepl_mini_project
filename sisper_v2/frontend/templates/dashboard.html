@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Dashboard</h2>
+            <p>Selamat datang, <strong>{{ nama }}</strong> ({{ nim }})</p>
+        </div>
+    </div>
+
+    {% if session.nim %}
+        <hr>
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h4>Rekomendasi Buku Untuk Anda</h4>
+                {% if rekomendasi %}
+                    <div class="row row-cols-1 row-cols-md-3 g-4">
+                        {% for b in rekomendasi %}
+                            <div class="col">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ b.judul }}</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">{{ b.penulis }}</h6>
+                                        <p class="card-text text-truncate">{{ b.sinopsis }}</p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <small class="text-muted">ISBN: {{ b.isbn }}</small>
+                                        <span class="badge {{ 'bg-success' if b.status == 'tersedia' else 'bg-warning' }} float-end">
+                                            {{ b.status|capitalize }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">Belum ada rekomendasi saat ini.</p>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
