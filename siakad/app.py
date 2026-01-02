@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 import pymysql
 import hashlib
 from config import DB_CONFIG
@@ -13,18 +13,20 @@ def get_db_connection():
 # Web routes
 @app.route("/")
 def home():
-    return "Home"
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT * FROM mahasiswa")
+            mahasiswa_list = cursor.fetchall()
 
+        for m in mahasiswa_list:
+            m.pop("password", None)
+            if m.get("tanggal_masuk"):
+                m["tanggal_masuk"] = m["tanggal_masuk"].strftime("%Y-%m-%d")
 
-@app.route("/v2")
-def home_v2():
-    return "Home v2"
-
-
-@app.route("/v2/status-peminjaman-mahasiswa/<int:nim>")
-def status_peminjaman_mahasiswa():
-    return "OK"
-
+        return render_template("mahasiswa.html", mahasiswa=mahasiswa_list)
+    finally:
+        conn.close()
 
 # ------------------------------------------------------
 
