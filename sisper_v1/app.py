@@ -1,7 +1,4 @@
-import curses
 import hashlib
-from re import search
-
 from flask import Flask, render_template, request, redirect, session, url_for, flash, g
 from db import get_db
 import requests
@@ -380,7 +377,7 @@ def setujui_booking():
         cur = db.cursor()
         idPinjam = request.args.get('id')
 
-        # Check current status
+        # Check the current status
         cur.execute("SELECT status FROM peminjaman WHERE id=%s", (idPinjam,))
         row = cur.fetchone()
         if not row:
