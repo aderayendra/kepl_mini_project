@@ -10,13 +10,6 @@ app = Flask(__name__)
 redis_client = redis.Redis(**REDIS_CONFIG)
 
 
-def handle_mahasiswa_update(data):
-    # Requirement mentions subscribing to mahasiswa_events, 
-    # but the recommendation schema doesn't have a mahasiswa table.
-    # We'll just log it for now as per the requirement to subscribe.
-    print(f"Received mahasiswa_updated event with {len(data)} records")
-
-
 def handle_book_event(event_type, data):
     from db import get_db
     db = get_db()
@@ -55,23 +48,21 @@ def handle_book_event(event_type, data):
 
 def start_subscriber():
     pubsub = redis_client.pubsub()
-    pubsub.subscribe("mahasiswa_events", "book_events")
+    pubsub.subscribe("book_events")
     print("Subscribed to mahasiswa_events and book_events channels...")
     for message in pubsub.listen():
         if message["type"] == "message":
             try:
                 payload = json.loads(message["data"])
                 event_type = payload.get("event")
-                if event_type == "mahasiswa_updated":
-                    handle_mahasiswa_update(payload.get("data"))
-                elif event_type in ["book_added", "book_updated", "book_deleted", "book_status_updated",
-                                    "book_searched"]:
-                    handle_book_event(event_type,
-                                      payload.get("data") if event_type != "book_searched" else payload.get("data"))
+                if event_type in ["book_added", "book_updated", "book_deleted", "book_status_updated",
+                                  "book_searched"]:
+                    print(f"Received book event {event_type}...")
+                    handle_book_event(
+                        event_type,
+                        payload.get("data") if event_type != "book_searched" else payload.get("data")
+                    )
                     # Note: book_searched data is already the inner dict
-                elif event_type == "book_status_updated":
-                    # Just in case it's structured differently in some places, but handle_book_event covers it
-                    pass
             except Exception as e:
                 print(f"Error processing Redis message: {e}")
 

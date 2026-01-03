@@ -41,6 +41,7 @@ def start_subscriber():
             try:
                 payload = json.loads(message["data"])
                 if payload.get("event") == "book_status_updated":
+                    print(f"Received book_status_updated event for ISBN {payload.get('data').get('isbn')}")
                     handle_book_status_update(payload.get("data"))
             except Exception as e:
                 print(f"Error processing Redis message: {e}")
@@ -57,6 +58,7 @@ def publish_book_event(event_type, data):
             "event": event_type,
             "data": data
         }
+        print(f"Publishing book event {event_type} with payload {event_payload}")
         redis_client.publish("book_events", json.dumps(event_payload))
     except Exception as e:
         print(f"Error publishing to Redis: {e}")

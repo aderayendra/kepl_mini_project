@@ -1,11 +1,9 @@
-from time import sleep
 from flask import g
 import pymysql
-from config import DB_CONFIG, SIMULATED_LOAD_TIME
+from config import DB_CONFIG
 
 
 def get_db():
-    sleep(SIMULATED_LOAD_TIME)
     return pymysql.connect(**DB_CONFIG)
 
 

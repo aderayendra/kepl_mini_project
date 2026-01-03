@@ -32,7 +32,7 @@ def sync_mahasiswa():
     db = get_db_conn()
     cur = db.cursor()
     try:
-        url = "http://127.0.0.1:5001/api/mahasiswa"
+        url = "http://127.0.0.1:5000/api/mahasiswa"
         response = requests.get(url)
         response_json = response.json()
         mahasiswa_list = response_json["mahasiswa"]

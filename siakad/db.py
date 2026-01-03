@@ -1,6 +1,7 @@
+from time import sleep
 from flask import g
 import pymysql
-from .config import DB_CONFIG
+from config import DB_CONFIG
 
 
 def get_db():
@@ -13,7 +14,7 @@ def get_db_conn():
     return g.db
 
 
-def close_db(e=None):
+def close_db():
     db = g.pop('db', None)
     if db is not None:
         db.close()

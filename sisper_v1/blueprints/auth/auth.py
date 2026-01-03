@@ -33,7 +33,7 @@ def login():
         return render_template("login.html")
 
     try:
-        url = "http://127.0.0.1:5001/api/mahasiswa/login"
+        url = "http://127.0.0.1:5000/api/mahasiswa/login"
         payload = {"nim": nim, "password": password}
         response = requests.post(url, json=payload)
         response_json = response.json()

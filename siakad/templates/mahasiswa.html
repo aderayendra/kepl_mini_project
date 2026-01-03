@@ -7,41 +7,44 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
-    <div class="container mt-5">
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white">
-                <h3 class="mb-0">Daftar Mahasiswa</h3>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>NIM</th>
-                                <th>Nama</th>
-                                <th>Email</th>
-                                <th>Jurusan</th>
-                                <th>Angkatan</th>
-                                <th>Tanggal Masuk</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for m in mahasiswa %}
-                            <tr>
-                                <td>{{ m.nim }}</td>
-                                <td>{{ m.nama }}</td>
-                                <td>{{ m.email }}</td>
-                                <td>{{ m.jurusan }}</td>
-                                <td>{{ m.angkatan }}</td>
-                                <td>{{ m.tanggal_masuk }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Daftar Mahasiswa</h3>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>NIM</th>
+                        <th>Nama</th>
+                        <th>Jurusan</th>
+                        <th>Tanggal Masuk</th>
+                        <th>Aksi</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for m in mahasiswa %}
+                        <tr>
+                            <td>{{ m.nim }}</td>
+                            <td>{{ m.nama }}</td>
+                            <td>{{ m.jurusan }}</td>
+                            <td>{{ m.tanggal_masuk }}</td>
+                            <td>
+                                <button class="btn btn-primary btn-sm"
+                                        onclick="window.open('/cek-pinjaman/{{ m.nim }}', '_blank')">
+                                    Cek Peminjaman
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

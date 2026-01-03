@@ -25,6 +25,7 @@ def publish_mahasiswa_event():
             "event": "mahasiswa_updated",
             "data": mahasiswa_list
         }
+        print(f"Publishing mahasiswa_updated event: {event_data}")
         redis_client.publish("mahasiswa_events", json.dumps(event_data))
     except Exception as e:
         print(f"Error publishing to Redis: {e}")
@@ -58,7 +59,7 @@ def login():
         return jsonify({"authenticated": False, "error": "Username atau password salah"}), 401
 
     try:
-        url = "http://127.0.0.1:5001/api/mahasiswa/login"
+        url = "http://127.0.0.1:5000/api/mahasiswa/login"
         payload = {"nim": nim, "password": password}
         response = requests.post(url, json=payload)
         response_json = response.json()
@@ -100,7 +101,7 @@ def sync_mahasiswa():
     db = get_db_conn()
     cur = db.cursor()
     try:
-        url = "http://127.0.0.1:5001/api/mahasiswa"
+        url = "http://127.0.0.1:5000/api/mahasiswa"
         response = requests.get(url)
         response_json = response.json()
         mahasiswa_list = response_json["mahasiswa"]

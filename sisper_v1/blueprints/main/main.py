@@ -1,5 +1,4 @@
 from flask import Blueprint, render_template, session, flash, redirect
-from ...db import get_db_conn
 
 main_bp = Blueprint('main', __name__)
 

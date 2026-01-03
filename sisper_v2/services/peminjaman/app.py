@@ -18,6 +18,7 @@ def publish_peminjaman_event(isbn, status):
                 "status": status
             }
         }
+        print(f"Publishing book event {event_payload['event']} with payload {event_payload}")
         redis_client.publish("book_events", json.dumps(event_payload))
     except Exception as e:
         print(f"Error publishing to Redis: {e}")
@@ -83,8 +84,10 @@ def start_subscriber():
                 payload = json.loads(message["data"])
                 event_type = payload.get("event")
                 if event_type == "mahasiswa_updated":
+                    print("Received mahasiswa_updated event...")
                     handle_mahasiswa_update(payload.get("data"))
                 elif event_type in ["book_added", "book_updated", "book_deleted"]:
+                    print(f"Received book_event {event_type}...")
                     handle_book_event(event_type, payload.get("data"))
             except Exception as e:
                 print(f"Error processing Redis message: {e}")

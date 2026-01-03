@@ -6,6 +6,7 @@ from .blueprints.peminjaman.peminjaman import peminjaman_bp
 from .blueprints.mahasiswa.mahasiswa import mahasiswa_bp
 from .blueprints.main.main import main_bp
 
+
 def create_app():
     app = Flask(__name__)
     app.secret_key = "KZN-%d""7A[3J(90e$AF6~O#Z8grVsqqUuuf{#Qy>}URL_;ZEJnOz/-vP+*^EPE"
@@ -20,6 +21,7 @@ def create_app():
     app.register_blueprint(main_bp)
 
     return app
+
 
 if __name__ == "__main__":
     app = create_app()
