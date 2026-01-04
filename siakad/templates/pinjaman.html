@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status Pinjaman | SIAKAD</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Status Pinjaman Mahasiswa</h3>
+                </div>
+                <div class="card-body">
+                    {% if error %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ error }}
+                            {% if details %}
+                                <br><small>{{ details }}</small>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <div class="mb-3">
+                            <strong>NIM:</strong> {{ pinjaman.nim }}
+                        </div>
+                        <div class="mb-3">
+                            <strong>Status:</strong>
+                            {% if pinjaman.belum_mengembalikan_buku %}
+                                <span class="badge bg-warning text-dark">Masih memiliki pinjaman</span>
+                            {% else %}
+                                <span class="badge bg-success">Tidak ada pinjaman aktif</span>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <strong>Jumlah Buku Dipinjam:</strong> {{ pinjaman.jumlah }}
+                        </div>
+                    {% endif %}
+                    <div class="mt-4">
+                        <a href="/" class="btn btn-secondary">Kembali ke Daftar Mahasiswa</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

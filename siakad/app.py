@@ -30,12 +30,12 @@ def cek_pinjaman(nim):
     try:
         response = requests.post("http://localhost:5004/peminjaman/cek-pinjaman", json={"nim": nim})
         if response.status_code == 200:
-            return jsonify(response.json())
+            return render_template("pinjaman.html", pinjaman=response.json())
         else:
-            return jsonify(
-                {"error": "Failed to fetch from loan service", "details": response.json()}), response.status_code
+            return render_template("pinjaman.html", error="Failed to fetch from loan service",
+                                   details=response.json()), response.status_code
     except requests.exceptions.RequestException as e:
-        return jsonify({"error": f"Loan service unavailable: {str(e)}"}), 503
+        return render_template("pinjaman.html", error=f"Loan service unavailable: {str(e)}"), 503
 
 
 # ------------------------------------------------------

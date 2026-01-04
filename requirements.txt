@@ -1,3 +1,5 @@
 flask
+requests
 pymysql
 redis
+python-dotenv

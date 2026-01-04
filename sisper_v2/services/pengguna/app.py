@@ -10,12 +10,14 @@ app = Flask(__name__)
 redis_client = redis.Redis(**REDIS_CONFIG)
 
 
-def publish_mahasiswa_event():
+def publish_mahasiswa_event(mahasiswa_list=None):
     db = get_db_conn()
     cur = db.cursor()
     try:
-        cur.execute("SELECT * FROM mahasiswa")
-        mahasiswa_list = cur.fetchall()
+        # if mahasiswa_list empty or not a list
+        if not mahasiswa_list or type(mahasiswa_list) != list:
+            cur.execute("SELECT * FROM mahasiswa")
+            mahasiswa_list = cur.fetchall()
 
         for mhs in mahasiswa_list:
             if mhs.get("tanggal_masuk"):
@@ -82,7 +84,7 @@ def login():
                             mahasiswa["tanggal_masuk"], mahasiswa["no_hp"]
                         ])
             db.commit()
-            publish_mahasiswa_event()
+            publish_mahasiswa_event(mahasiswa_list=[mahasiswa])
             return jsonify({
                 "authenticated": True,
                 "user": {

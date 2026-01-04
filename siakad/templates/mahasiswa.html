@@ -32,10 +32,7 @@
                             <td>{{ m.jurusan }}</td>
                             <td>{{ m.tanggal_masuk }}</td>
                             <td>
-                                <button class="btn btn-primary btn-sm"
-                                        onclick="window.open('/cek-pinjaman/{{ m.nim }}', '_blank')">
-                                    Cek Peminjaman
-                                </button>
+                                <a class="btn btn-primary btn-sm" href="/cek-pinjaman/{{ m.nim }}">Cek Pinjaman</a>
                             </td>
                         </tr>
                     {% endfor %}
