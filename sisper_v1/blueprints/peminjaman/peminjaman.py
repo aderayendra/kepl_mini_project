@@ -1,11 +1,16 @@
 from flask import Blueprint, render_template, request, redirect, session, flash
 from ...db import get_db_conn
+from ...config import LOAD_TIME
+from time import sleep
 
 peminjaman_bp = Blueprint('peminjaman', __name__)
 
 
 @peminjaman_bp.route("/peminjaman")
 def peminjaman():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     if "nim" not in session and "admin" not in session:
         flash('Anda harus login terlebih dahulu', 'error')
         return redirect("/")
@@ -45,6 +50,9 @@ def peminjaman():
 
 @peminjaman_bp.route("/peminjaman/tambah", methods=["POST"])
 def peminjaman_tambah():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     if "admin" not in session:
         flash('Anda bukan admin', 'error')
         return redirect("/dashboard")
@@ -93,6 +101,9 @@ def peminjaman_tambah():
 
 @peminjaman_bp.route("/peminjaman/booking", methods=["POST"])
 def peminjaman_booking():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     if "nim" not in session:
         flash('Anda belum login sebagai mahasiswa', 'error')
         return redirect("/dashboard")
@@ -127,6 +138,9 @@ def peminjaman_booking():
 
 @peminjaman_bp.route("/peminjaman/setujui-booking", methods=["GET"])
 def setujui_booking():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     if "admin" not in session:
         flash('Anda bukan admin', 'error')
         return redirect("/dashboard")
@@ -156,6 +170,9 @@ def setujui_booking():
 
 @peminjaman_bp.route("/peminjaman/tolak-booking", methods=["GET"])
 def tolak_booking():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     if "admin" not in session:
         flash('Anda bukan admin', 'error')
         return redirect("/dashboard")
@@ -184,6 +201,9 @@ def tolak_booking():
 
 @peminjaman_bp.route("/peminjaman/kembalikan", methods=["GET"])
 def kembalikan_buku():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     if "admin" not in session:
         flash('Anda bukan admin', 'error')
         return redirect("/dashboard")
@@ -214,6 +234,9 @@ def kembalikan_buku():
 
 @peminjaman_bp.route("/peminjaman/hapus-booking", methods=["GET"])
 def hapus_booking():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     if "nim" not in session:
         flash('Anda harus login terlebih dahulu', 'error')
         return redirect("/dashboard")

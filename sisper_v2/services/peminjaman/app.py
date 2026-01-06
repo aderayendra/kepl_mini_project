@@ -1,9 +1,11 @@
+from time import sleep
+
 from flask import Flask, jsonify, request
 import redis
 import json
 import threading
 from db import get_db_conn
-from config import REDIS_CONFIG
+from config import REDIS_CONFIG, LOAD_TIME
 
 app = Flask(__name__)
 redis_client = redis.Redis(**REDIS_CONFIG)
@@ -100,6 +102,9 @@ subscriber_thread.start()
 
 @app.route("/peminjaman", methods=["POST"])
 def peminjaman():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     data = request.get_json() or {}
     nim = data.get("nim")
     search_keyword = data.get("s")
@@ -145,6 +150,9 @@ def peminjaman():
 
 @app.route("/peminjaman/tambah", methods=["POST"])
 def peminjaman_tambah():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     data = request.get_json()
     if not data:
         return jsonify({"error": "Invalid payload"}), 400
@@ -187,6 +195,9 @@ def peminjaman_tambah():
 
 @app.route("/peminjaman/booking", methods=["POST"])
 def peminjaman_booking():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     data = request.get_json()
     if not data:
         return jsonify({"error": "Invalid payload"}), 400
@@ -222,6 +233,9 @@ def peminjaman_booking():
 
 @app.route("/peminjaman/setujui-booking", methods=["POST"])
 def setujui_booking():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     data = request.get_json()
     if not data or "id" not in data:
         return jsonify({"error": "ID is required"}), 400
@@ -250,6 +264,9 @@ def setujui_booking():
 
 @app.route("/peminjaman/tolak-booking", methods=["POST"])
 def tolak_booking():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     data = request.get_json()
     if not data or "id" not in data:
         return jsonify({"error": "ID is required"}), 400
@@ -277,6 +294,9 @@ def tolak_booking():
 
 @app.route("/peminjaman/kembalikan", methods=["POST"])
 def kembalikan_buku():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     data = request.get_json()
     if not data or "id" not in data:
         return jsonify({"error": "ID is required"}), 400
@@ -306,6 +326,9 @@ def kembalikan_buku():
 
 @app.route("/peminjaman/hapus-booking", methods=["DELETE"])
 def hapus_booking():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     idPinjam = request.args.get('id')
     nim = request.args.get('nim')
 
@@ -339,6 +362,9 @@ def hapus_booking():
 
 @app.route("/peminjaman/cek-pinjaman", methods=["POST"])
 def cek_pinjaman():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     data = request.get_json()
     if not data or "nim" not in data:
         return jsonify({"error": "NIM is required"}), 400

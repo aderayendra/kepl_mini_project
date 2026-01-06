@@ -1,12 +1,18 @@
+from time import sleep
+
 import requests
 from flask import Blueprint, render_template, redirect, session, flash
 from ...db import get_db_conn
+from ...config import LOAD_TIME
 
 mahasiswa_bp = Blueprint('mahasiswa', __name__)
 
 
 @mahasiswa_bp.route("/mahasiswa")
 def mahasiswa():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     if "admin" not in session:
         flash('Anda harus login terlebih dahulu', 'error')
         return redirect("/")
@@ -25,6 +31,9 @@ def mahasiswa():
 
 @mahasiswa_bp.route("/mahasiswa/sync")
 def sync_mahasiswa():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     if "admin" not in session:
         flash('Anda harus login terlebih dahulu', 'error')
         return redirect("/")

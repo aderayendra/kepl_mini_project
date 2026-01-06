@@ -1,7 +1,10 @@
+from time import sleep
+
 from flask import Flask, jsonify, request, render_template
 import hashlib
 import requests
 from db import get_db_conn
+from config import LOAD_TIME
 
 app = Flask(__name__)
 
@@ -9,6 +12,9 @@ app = Flask(__name__)
 # Web routes
 @app.route("/")
 def home():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     conn = get_db_conn()
     try:
         with conn.cursor() as cursor:
@@ -27,6 +33,9 @@ def home():
 
 @app.route("/cek-pinjaman/<int:nim>", methods=["GET"])
 def cek_pinjaman(nim):
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     try:
         response = requests.post("http://localhost:5004/peminjaman/cek-pinjaman", json={"nim": nim})
         if response.status_code == 200:
@@ -43,6 +52,9 @@ def cek_pinjaman(nim):
 
 @app.route("/api/mahasiswa", methods=["GET"])
 def get_all_mahasiswa():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     conn = get_db_conn()
     try:
         with conn.cursor() as cursor:
@@ -64,8 +76,10 @@ def get_all_mahasiswa():
 
 @app.route("/api/mahasiswa/login", methods=["POST"])
 def authenticate_mahasiswa():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     data = request.get_json()
-
     if not data or "nim" not in data or "password" not in data:
         return jsonify({"error": "Invalid payload"}), 400
 

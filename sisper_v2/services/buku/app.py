@@ -1,8 +1,10 @@
+from time import sleep
+
 from flask import Flask, jsonify, request
 import redis
 import json
 from db import get_db_conn
-from config import REDIS_CONFIG
+from config import REDIS_CONFIG, LOAD_TIME
 
 import threading
 
@@ -66,6 +68,9 @@ def publish_book_event(event_type, data):
 
 @app.route("/buku", methods=["POST"])
 def buku():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     data = request.get_json() or {}
     search_keyword = data.get('s')
     nim = data.get('nim')
@@ -111,6 +116,9 @@ def buku():
 
 @app.route("/buku/tambah", methods=["POST"])
 def buku_tambah():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     data = request.get_json()
     if not data:
         return jsonify({"error": "Invalid payload"}), 400
@@ -138,6 +146,9 @@ def buku_tambah():
 
 @app.route('/buku/edit', methods=['POST'])
 def edit_buku():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     data = request.get_json()
     if not data:
         return jsonify({"error": "Invalid payload"}), 400
@@ -164,6 +175,9 @@ def edit_buku():
 
 @app.route('/buku/hapus', methods=['DELETE'])
 def hapus_buku():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     isbn = request.args.get('isbn')
     if not isbn:
         return jsonify({"error": "ISBN is required"}), 400

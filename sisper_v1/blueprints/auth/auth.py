@@ -1,13 +1,20 @@
 import hashlib
+from time import sleep
+
 import requests
 from flask import Blueprint, render_template, request, redirect, session, flash
 from ...db import get_db_conn
+from ...config import LOAD_TIME
 
 auth_bp = Blueprint('auth', __name__)
 
 
 @auth_bp.route("/", methods=["GET", "POST"])
 def login():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
+
     if "nim" in session or "admin" in session:
         return redirect("/dashboard")
 
@@ -68,5 +75,8 @@ def login():
 
 @auth_bp.route("/logout")
 def logout():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     session.clear()
     return redirect("/")

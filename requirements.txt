@@ -3,3 +3,12 @@ requests
 pymysql
 redis
 python-dotenv
+
+jupyter
+pandas
+numpy
+matplotlib
+seaborn
+scikit-learn
+notebook
+ipykernel

@@ -1,10 +1,17 @@
+from time import sleep
+
 from flask import Blueprint, render_template, request, redirect, session, flash
 from ...db import get_db_conn
+from ...config import LOAD_TIME
 
 buku_bp = Blueprint('buku', __name__)
 
+
 @buku_bp.route("/buku")
 def buku():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     if "nim" not in session and "admin" not in session:
         flash('Anda harus login terlebih dahulu', 'error')
         return redirect("/")
@@ -54,8 +61,12 @@ def buku():
 
     return render_template("buku.html", buku=buku_list)
 
+
 @buku_bp.route("/buku/tambah", methods=["POST", "GET"])
 def buku_tambah():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     if request.method != "POST":
         return redirect("/buku")
 
@@ -84,8 +95,12 @@ def buku_tambah():
 
     return redirect("/buku")
 
+
 @buku_bp.route('/buku/edit', methods=['POST'])
 def edit_buku():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     if not session.get('admin'):
         flash('Akses ditolak', 'error')
         return redirect('/buku')
@@ -110,8 +125,12 @@ def edit_buku():
 
     return redirect('/buku')
 
+
 @buku_bp.route('/buku/hapus', methods=['GET'])
 def hapus_buku():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     if not session.get('admin'):
         flash('Akses ditolak', 'error')
         return redirect('/buku')

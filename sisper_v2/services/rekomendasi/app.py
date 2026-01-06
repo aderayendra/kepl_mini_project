@@ -1,10 +1,11 @@
+from time import sleep
+
 from flask import Flask, jsonify, request
-import hashlib
-import requests
 import redis
 import json
 from db import get_db_conn
 from config import REDIS_CONFIG
+from config import LOAD_TIME
 
 app = Flask(__name__)
 redis_client = redis.Redis(**REDIS_CONFIG)
@@ -75,6 +76,9 @@ subscriber_thread.start()
 
 @app.route("/rekomendasi", methods=["POST"])
 def rekomendasi():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     data = request.get_json()
     if not data or "nim" not in data:
         return jsonify({"error": "NIM is required"}), 400

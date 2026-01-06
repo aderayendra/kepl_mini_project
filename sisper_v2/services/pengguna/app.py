@@ -1,10 +1,12 @@
+from time import sleep
+
 from flask import Flask, jsonify, request
 import hashlib
 import requests
 import redis
 import json
 from db import get_db_conn
-from config import REDIS_CONFIG
+from config import REDIS_CONFIG, LOAD_TIME
 
 app = Flask(__name__)
 redis_client = redis.Redis(**REDIS_CONFIG)
@@ -35,6 +37,9 @@ def publish_mahasiswa_event(mahasiswa_list=None):
 
 @app.route("/login", methods=["POST"])
 def login():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     data = request.get_json()
     if not data or "nim" not in data or "password" not in data or "jenis" not in data:
         return jsonify({"error": "Invalid payload"}), 400
@@ -100,6 +105,9 @@ def login():
 
 @app.route("/sync-mahasiswa", methods=["POST"])
 def sync_mahasiswa():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     db = get_db_conn()
     cur = db.cursor()
     try:
@@ -134,6 +142,9 @@ def sync_mahasiswa():
 
 @app.route("/mahasiswa", methods=["GET"])
 def get_mahasiswa():
+    # simulate high load
+    sleep(LOAD_TIME)
+    # --------------
     db = get_db_conn()
     cur = db.cursor()
     try:
