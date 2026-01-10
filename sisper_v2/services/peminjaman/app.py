@@ -29,6 +29,7 @@ def publish_peminjaman_event(isbn, status):
 def handle_mahasiswa_update(data):
     from db import get_db
     db = get_db()
+    print(data)
     try:
         cur = db.cursor()
         for mhs in data:
@@ -163,9 +164,6 @@ def peminjaman_tambah():
         isbn = data.get("isbn")
         nim = data.get("nim")
 
-        if not isbn or not isbn.isdigit() or len(isbn) != 13:
-            return jsonify({"error": "ISBN harus terdiri dari 13 digit angka"}), 400
-
         if not nim or not nim.isdigit():
             return jsonify({"error": "NIM harus berupa angka"}), 400
 
@@ -210,9 +208,6 @@ def peminjaman_booking():
 
         if not nim:
             return jsonify({"error": "NIM is required"}), 400
-
-        if not isbn or not isbn.isdigit() or len(isbn) != 13:
-            return jsonify({"error": "ISBN harus terdiri dari 13 digit angka"}), 400
 
         cur.execute("SELECT isbn FROM buku WHERE isbn = %s AND waktu_hapus IS NULL", (isbn,))
         if not cur.fetchone():

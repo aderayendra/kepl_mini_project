@@ -64,10 +64,6 @@ def peminjaman_tambah():
         isbn = request.form["isbn"]
         nim = request.form["nim"]
 
-        if not isbn.isdigit() or len(isbn) != 13:
-            flash('ISBN harus terdiri dari 13 digit angka', 'error')
-            return redirect("/peminjaman")
-
         if not nim.isdigit():
             flash('NIM harus berupa angka', 'error')
             return redirect("/peminjaman")
@@ -114,10 +110,6 @@ def peminjaman_booking():
         cur = db.cursor()
         isbn = request.form["isbn"]
         nim = session["nim"]
-
-        if not isbn.isdigit() or len(isbn) != 13:
-            flash('ISBN harus terdiri dari 13 digit angka', 'error')
-            return redirect("/peminjaman")
 
         cur.execute("SELECT isbn FROM buku WHERE isbn = %s AND waktu_hapus IS NULL", (isbn,))
         if not cur.fetchone():

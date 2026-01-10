@@ -22,7 +22,7 @@ def publish_mahasiswa_event(mahasiswa_list=None):
             mahasiswa_list = cur.fetchall()
 
         for mhs in mahasiswa_list:
-            if mhs.get("tanggal_masuk"):
+            if mhs.get("tanggal_masuk") and type(mhs.get("tanggal_masuk")) != str:
                 mhs["tanggal_masuk"] = mhs["tanggal_masuk"].strftime("%Y-%m-%d")
 
         event_data = {

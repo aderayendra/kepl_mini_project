@@ -64,6 +64,8 @@ def peminjaman_booking():
     if request.method != "POST":
         return redirect("/peminjaman")
 
+    print(session)
+
     try:
         url = f"{PEMINJAMAN_SERVICE_URL}/peminjaman/booking"
         payload = {
