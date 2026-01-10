@@ -1,6 +1,6 @@
 import pymysql
 
-LOAD_TIME = 0
+LOAD_TIME = 5
 
 DB_CONFIG = {
     "host": "127.0.0.1",
